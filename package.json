@@ -1,0 +1,14 @@
+{
+  "name": "github-starred-top10",
+  "version": "1.0.0",
+  "description": "实时抓取 GitHub Starred 前 10 项目，提供 CMD 常驻聊天终端与 /start 本地可视化网页",
+  "type": "module",
+  "main": "src/cli.js",
+  "scripts": {
+    "start": "node src/cli.js",
+    "web": "node src/cli.js --autostart"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

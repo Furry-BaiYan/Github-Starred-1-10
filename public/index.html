@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GitHub 全站 Starred 前 10 实时排行榜，观测开源世界的璀璨星轨。">
+  <meta name="theme-color" content="#0a0d0c">
+  <title>星轨观测站 · GitHub Top 10</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="星轨观测站首页">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <circle cx="20" cy="20" r="5" fill="currentColor"/>
+        <ellipse cx="20" cy="20" rx="17" ry="8" stroke="currentColor" stroke-width="1.5" transform="rotate(-35 20 20)"/>
+        <circle cx="33" cy="11" r="2.5" fill="currentColor"/>
+      </svg>
+      <span class="brand-type"><strong>星轨观测站</strong><small>ORBIT / OBSERVATORY</small></span>
+    </a>
+    <div class="header-actions">
+      <div class="live-pill" id="live-pill" role="status">
+        <span class="live-dot"></span>
+        <span id="source-label">正在连接数据源</span>
+      </div>
+      <button class="refresh-button" id="refresh-button" type="button" aria-label="实时刷新排行榜">
+        <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6v5h-5M4 18v-5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.2 9A7 7 0 0 0 6.1 6.1L4 8m16 8-2.1 1.9A7 7 0 0 1 5.8 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>实时刷新</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span>GLOBAL INDEX</span><span class="eyebrow-line"></span><span>VOL. 001</span></p>
+        <h1 id="page-title">开源世界的<br><em>十束星光。</em></h1>
+        <p class="hero-description">穿越代码星海，定格此刻最受瞩目的开源坐标。<br>GitHub 全站 Starred 前 10，实时抵达。</p>
+      </div>
+      <div class="orbit-graphic" aria-hidden="true">
+        <div class="orbit-ring orbit-ring-outer"></div>
+        <div class="orbit-ring orbit-ring-inner"></div>
+        <div class="orbit-axis"></div>
+        <span class="orbit-star">✦</span>
+        <span class="orbit-coordinate coordinate-top">STAR / 001</span>
+        <span class="orbit-coordinate coordinate-bottom">LIVE TELEMETRY</span>
+      </div>
+    </section>
+
+    <section class="kpi-strip" aria-label="排行榜摘要">
+      <div class="kpi kpi-total">
+        <div class="kpi-label"><span class="kpi-index">01</span>TOP 10 总星数</div>
+        <div class="kpi-value" id="total-stars">—</div>
+        <div class="kpi-foot">COMMUNITY CONSTELLATION</div>
+      </div>
+      <div class="kpi kpi-leader">
+        <div class="kpi-label"><span class="kpi-index">02</span>当前领航者</div>
+        <a class="leader-link" id="leader-name" href="https://github.com" target="_blank" rel="noopener noreferrer">等待数据 <span>↗</span></a>
+        <div class="kpi-foot" id="leader-stars">LEADING REPOSITORY</div>
+      </div>
+      <div class="kpi kpi-time">
+        <div class="kpi-label"><span class="kpi-index">03</span>最近一次观测</div>
+        <div class="time-value" id="fetched-time">同步中</div>
+        <div class="kpi-foot" id="rate-limit">DATA ACQUISITION IN PROGRESS</div>
+      </div>
+    </section>
+
+    <section class="leaderboard-section" aria-labelledby="leaderboard-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">THE CELESTIAL TEN</p>
+          <h2 id="leaderboard-title">全球星标排行 <span>/ TOP 10</span></h2>
+        </div>
+        <p class="section-note">按星标数观测 · 数据源自 GitHub.com</p>
+      </div>
+
+      <div class="controls" aria-label="排行榜筛选工具">
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <input id="search-input" type="search" placeholder="搜索项目、作者或主题…" autocomplete="off" aria-label="搜索项目、作者或主题">
+          <kbd>/</kbd>
+        </label>
+        <div class="language-filters" id="language-filters" aria-label="按语言筛选">
+          <button class="filter-pill active" type="button" data-language="全部" aria-pressed="true">全部</button>
+        </div>
+        <label class="sort-control">
+          <span class="sr-only">排序方式</span>
+          <select id="sort-select" aria-label="排序方式">
+            <option value="stars">按 Star 排序</option>
+            <option value="forks">按 Fork 排序</option>
+          </select>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 6 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </label>
+      </div>
+
+      <div class="results-meta" aria-live="polite"><span id="results-count">正在接收观测数据</span><span class="meta-line"></span><span id="filter-summary">REAL-TIME INDEX</span></div>
+      <div id="leaderboard" class="leaderboard" aria-busy="true">
+        <div class="loading-state"><span class="loading-orbit"></span><p>正在校准开源星轨</p><small>CONNECTING TO GITHUB.COM</small></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand"><span class="footer-star">✦</span> 献给每一位让开源宇宙发光的人</div>
+    <div class="footer-meta"><span class="status-tiny"></span><span id="sse-status">实时事件流连接中</span><span class="footer-divider">/</span><span>DATA BY GITHUB</span></div>
+  </footer>
+
+  <aside class="chat-dock" id="chat-dock" aria-label="终端常驻助手同步窗">
+    <section class="chat-panel" id="chat-panel" hidden aria-label="终端助手对话">
+      <header class="chat-header">
+        <div class="chat-heading"><span class="terminal-icon">›_</span><div><strong>终端常驻助手</strong><small><span class="status-tiny"></span> CMD / WEB 双向同步</small></div></div>
+        <button class="icon-button" id="chat-close" type="button" aria-label="收起终端助手"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </header>
+      <div class="chat-context"><span>CONTEXT</span><span>GitHub Top 10 · 实时观测</span></div>
+      <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="chat-empty"><span class="chat-empty-mark">›_</span><p>与终端保持同一频道</p><small>询问排行榜，或查看来自 CMD 的消息。</small></div>
+      </div>
+      <form class="chat-form" id="chat-form">
+        <label class="sr-only" for="chat-input">向终端助手发送消息</label>
+        <span class="prompt" aria-hidden="true">›</span>
+        <input id="chat-input" type="text" maxlength="2000" placeholder="询问 Top 10…" autocomplete="off" required>
+        <button id="chat-send" type="submit" aria-label="发送消息"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </form>
+    </section>
+    <button class="chat-toggle" id="chat-toggle" type="button" aria-expanded="false" aria-controls="chat-panel">
+      <span class="terminal-icon">›_</span><span>终端同步窗</span><span class="chat-toggle-status"></span><span class="unread-badge" id="unread-badge" hidden>0</span>
+      <svg class="chat-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 10 4-4 4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </aside>
+
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
